@@ -35,13 +35,16 @@ class SQLiteDatabaseManager implements DatabaseManager
 
     public function deleteDatabase($databaseName, $deletedAt = null): bool
     {
-        try {
-            $deletedAt = $deletedAt ?? now();
 
-            return $this->databaseResolver()->move($databaseName.'.sqlite', '.trash/'.$deletedAt->format('Y/m/d/H_i_s_').$databaseName.'.sqlite');
-        } catch (\Throwable $th) {
-            return false;
-        }
+        $deletedAt = $deletedAt ?? now();
+        $deletedDatabaseFilePath = '.trash/'.$deletedAt->format('Y/m/d/H_i_s_').$databaseName.'.sqlite';
+
+        $file = $this->databaseResolver()->move($databaseName.'.sqlite', $deletedDatabaseFilePath);
+
+        touch($this->databaseResolver()->path($deletedDatabaseFilePath), $deletedAt->getTimestamp());
+
+        return $file;
+    
     }
 
     public function eraseDatabase($databaseName): bool
@@ -80,7 +83,7 @@ class SQLiteDatabaseManager implements DatabaseManager
 
     public function makeConnectionConfig(array $baseConfig, string $databaseName): array
     {
-        $baseConfig['database'] = $this->resolveDatabaseName($databaseName.'.sqlite');
+        $baseConfig['database'] = $this->resolveDatabaseName($databaseName);
 
         return $baseConfig;
     }
@@ -99,7 +102,7 @@ class SQLiteDatabaseManager implements DatabaseManager
 
     protected function databaseResolver()
     {
-        return Storage::disk('team-database');
+        return Storage::disk(config('database_manager.sqlite_disk'));
     }
 
     public function __toString()

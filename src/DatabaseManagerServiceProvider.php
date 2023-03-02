@@ -16,8 +16,8 @@ class DatabaseManagerServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('laravel-database-manager');
-            // ->hasConfigFile()
+            ->name('laravel-database-manager')
+            ->hasConfigFile();
             // ->hasViews()
             // ->hasMigration('create_database_manager_table')
             // ->hasCommand(DatabaseManagerCommand::class);
