@@ -35,7 +35,6 @@ class SQLiteDatabaseManager implements DatabaseManager
 
     public function deleteDatabase($databaseName, $deletedAt = null): bool
     {
-
         $deletedAt = $deletedAt ?? now();
         $deletedDatabaseFilePath = '.trash/'.$deletedAt->format('Y/m/d/H_i_s_').$databaseName.'.sqlite';
 
@@ -44,7 +43,6 @@ class SQLiteDatabaseManager implements DatabaseManager
         touch($this->databaseResolver()->path($deletedDatabaseFilePath), $deletedAt->getTimestamp());
 
         return $file;
-    
     }
 
     public function eraseDatabase($databaseName): bool

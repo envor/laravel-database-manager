@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
-
     Storage::fake('local');
 
     Storage::disk('local')->put('test_database.sqlite', '');

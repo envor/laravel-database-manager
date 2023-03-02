@@ -4,6 +4,7 @@ namespace Envor\DatabaseManager;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+
 // use Envor\DatabaseManager\Commands\DatabaseManagerCommand;
 
 class DatabaseManagerServiceProvider extends PackageServiceProvider
@@ -18,8 +19,8 @@ class DatabaseManagerServiceProvider extends PackageServiceProvider
         $package
             ->name('laravel-database-manager')
             ->hasConfigFile();
-            // ->hasViews()
-            // ->hasMigration('create_database_manager_table')
-            // ->hasCommand(DatabaseManagerCommand::class);
+        // ->hasViews()
+        // ->hasMigration('create_database_manager_table')
+        // ->hasCommand(DatabaseManagerCommand::class);
     }
 }
