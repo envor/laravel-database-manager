@@ -60,11 +60,11 @@ $databaseManager->deleteDatabase(
 );
 ```
 
-Soft deletes the database and moves it to `storage/app/.trash/2023/3/2/7_04_38_my-new-database.sqlite`
+Soft deletes the database and moves it to `storage/app/.trash/2023/03/02/07_04_38_my-new-database.sqlite`
 
 ```php
 // erase the database permanently from disk
-$databaseManager->eraseDatabase('.trash/2023/3/2/7_04_38_my-new-database');
+$databaseManager->eraseDatabase('.trash/2023/03/02/07_04_38_my-new-database');
 ```
 
 Erases the database permanently form disk
