@@ -67,6 +67,8 @@ Soft deletes the database and moves it to `storage/app/.trash/2023/3/2/7_04_38_m
 $databaseManager->eraseDatabase('.trash/2023/3/2/7_04_38_my-new-database');
 ```
 
+Erases the database permanently form disk
+
 ```php
 $databaseManager->cleanupOldDatabases(
     daysOld: 1, // optional, defaults to one
