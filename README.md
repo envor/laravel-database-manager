@@ -23,13 +23,6 @@ You can install the package via composer:
 composer require envor/laravel-database-manager
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="laravel-database-manager-migrations"
-php artisan migrate
-```
-
 You can publish the config file with:
 
 ```bash
@@ -39,22 +32,90 @@ php artisan vendor:publish --tag="laravel-database-manager-config"
 This is the contents of the published config file:
 
 ```php
+// config for Envor/DatabaseManager
 return [
+    /***
+     * The disk where the sqlite database files will be stored.
+     */
+    'sqlite_disk' => 'local',
+
+    /***
+     * Available drivers that can be managed.
+     */
+    'managers' => [
+        'sqlite' => \Envor\DatabaseManager\SQLiteDatabaseManager::class,
+        'mysql' => \Envor\DatabaseManager\MySQLDatabaseManager::class,
+    ]
 ];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-database-manager-views"
 ```
 
 ## Usage
 
+### Sqlite
+
 ```php
-$databaseManager = new Envor\DatabaseManager();
-echo $databaseManager->echoPhrase('Hello, Envor!');
+$databaseManager = new Envor\DatabaseManager
+    ->manage('sqlite')
+    ->createDatabase('my-new-database');
 ```
+
+Creates an sqlite database at `storage/app/my-new-database.sqlite
+
+> The package appends the .sqlite file extension on its own,
+> and expects managed sqlite database files to have the extension
+
+```php
+echo now()->format('Y/m/d_h_i_s_');
+// 2023/3/2/7_04_38_
+$databaseManager->deleteDatabase(
+    databaseName: 'my-new-database', 
+    deletedAt: now(), // optional: defaults to now() (Carbon date)
+);
+```
+
+Soft deletes the database and moves it to `storage/app/.trash/2023/3/2/7_04_38_my-new-database.sqlite`
+
+```php
+// erase the database permanently from disk
+$databaseManager->eraseDatabase('.trash/2023/3/2/7_04_38_my-new-database');
+```
+
+```php
+$databaseManager->cleanupOldDatabases(
+    daysOld: 1, // optional, defaults to one
+);
+```
+
+Erases all the database files in the .trash folder with mtime more than one day old
+
+### MYQL
+
+```php
+$databaseManager = new Envor\DatabaseManager
+    ->manage('mysql')
+    ->setConnection('any-mysql-connection')
+    ->createDatabase('my-new-database');
+```
+
+```php
+echo now()->format('Y_m_d_h_i_s_');
+// 2023/3/2/7_04_38_
+$databaseManager->deleteDatabase(
+    databaseName: 'my_new_database', 
+    deletedAt: now(), // optional: defaults to now() (Carbon date)
+);
+```
+
+Soft deletes the database and moves it to `deleted_2023_3_2_7_04_38_my_new_database`
+
+```php
+$databaseManager->cleanupOldDatabases(
+    daysOld: 1, // optional, defaults to one
+);
+```
+
+No mtime for mysql, simply compares `$daysOld` against the formated time in the deleted name (`2023_3_2_7_04_38_`).
+This is done by using `Carbon::createFromFormat()`.
 
 ## Testing
 
