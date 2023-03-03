@@ -128,10 +128,9 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 - [inmanturbo](https://github.com/envor)
 - [All Contributors](../../contributors)
-
-Parts of this package are inspired by the `DatabaseManager` classes in [Tenancy for Laravel](https://github.com/archtechx/tenancy)
-[CONTRIBUTING](.github/CONTRIBUTING.md) was copied verbatim from [Spatie's CONTRIBUTING.md](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md)
-This package was generated using [spatie/package-skeleton-laravel](https://github.com/spatie/package-skeleton-laravel)
+- Parts of this package are inspired by the `DatabaseManager` classes in [Tenancy for Laravel](https://github.com/archtechx/tenancy)
+- [CONTRIBUTING](.github/CONTRIBUTING.md) was copied verbatim from [Spatie's CONTRIBUTING.md](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md)
+- This package was generated using [spatie/package-skeleton-laravel](https://github.com/spatie/package-skeleton-laravel)
 
 ## License
 
