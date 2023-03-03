@@ -89,7 +89,7 @@ echo now()->format('Y_m_d_h_i_s_');
 // 2023/3/2/7_04_38_
 $databaseManager->deleteDatabase(
     databaseName: 'my_new_database', 
-    deletedAt: now(), // optional: defaults to now() (Carbon date)
+    deletedAt: now(), // optional: defaults to now(). Uses Carbon. 
 );
 ```
 
