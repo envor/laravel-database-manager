@@ -7,3 +7,7 @@ it('can manage', function () {
         $this->assertInstanceOf($manager, DatabaseManager::manage($driver));
     }
 });
+
+it('throws an exception for an invalid driver', function () {
+    DatabaseManager::manage('invalid');
+})->throws(Envor\DatabaseManager\Exceptions\InvalidDriverException::class);
