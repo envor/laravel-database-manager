@@ -13,5 +13,5 @@ return [
     'managers' => [
         'sqlite' => \Envor\DatabaseManager\SQLiteDatabaseManager::class,
         'mysql' => \Envor\DatabaseManager\MySQLDatabaseManager::class,
-    ]
+    ],
 ];

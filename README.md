@@ -67,7 +67,7 @@ Soft deletes the database and moves it to `storage/app/.trash/2023/03/02/07_04_3
 $databaseManager->eraseDatabase('.trash/2023/03/02/07_04_38_my-new-database');
 ```
 
-Erases the database permanently form disk
+Erases the database permanently from disk
 
 ```php
 $databaseManager->cleanupOldDatabases(
@@ -86,6 +86,10 @@ $databaseManager = new Envor\DatabaseManager
     ->createDatabase('my_new_database');
 ```
 
+Sets the connection then creates a new database.
+>Note:
+>The sqlite driver to doesn't need a connection because it uses the `Illuminate\Support\Storage` helper under the hood.
+
 ```php
 echo now()->format('Y_m_d_h_i_s_');
 // 2023/3/2/7_04_38_
@@ -103,8 +107,8 @@ $databaseManager->cleanupOldDatabases(
 );
 ```
 
-No mtime for mysql, simply compares `$daysOld` against the formated time in the deleted name (`2023_3_2_7_04_38_`).
-This is done by using `Carbon::createFromFormat()`.
+No mtime for mysql, simply compares `$daysOld` against the formated time segment in the deleted name `2023_3_2_7_04_38_`.
+This is done by using `Carbon::createFromFormat('Y_m_H_h_i_s_')`.
 
 ## Testing
 
