@@ -7,14 +7,14 @@ use Envor\DatabaseManager\Exceptions\InvalidDriverException;
 
 class DatabaseManager
 {
-    public function manage(string $driver) : DatabaseManagerContract
+    public function manage(string $driver): DatabaseManagerContract
     {
         if (! array_key_exists($driver, config('database-manager.managers'))) {
             throw new InvalidDriverException($driver);
         }
 
-        $manager = config('database-manager.managers.' . $driver);
+        $manager = config('database-manager.managers.'.$driver);
 
-        return (new $manager);
+        return new $manager;
     }
 }
