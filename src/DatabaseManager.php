@@ -37,7 +37,7 @@ class DatabaseManager
             app()->forgetInstance(DatabaseManagerContract::class);
         }
 
-        app()->bind(DatabaseManagerContract::class, $manager);
+        app()->singleton(DatabaseManagerContract::class, $manager);
 
         return $this;
     }
@@ -50,5 +50,10 @@ class DatabaseManager
     public function fake()
     {
         return $this->registerDatabaseManager(FakeDatabaseManager::class);
+    }
+
+    public function manageDatabasesUsing(string $callback)
+    {
+        return $this->registerDatabaseManager($callback);
     }
 }
