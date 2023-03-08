@@ -41,7 +41,7 @@ class DatabaseManager
 
         return $this;
     }
-    
+
     public function getDatabaseManager(): DatabaseManagerContract
     {
         return app(DatabaseManagerContract::class);

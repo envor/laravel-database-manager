@@ -33,7 +33,7 @@ class FakeDatabaseManager implements DatabaseManager
         return $baseConfig;
     }
 
-    public function setConnection(string $connection) : self
+    public function setConnection(string $connection): self
     {
         return $this;
     }
