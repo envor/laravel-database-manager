@@ -11,3 +11,11 @@ it('can manage', function () {
 it('throws an exception for an invalid driver', function () {
     DatabaseManager::manage('invalid');
 })->throws(Envor\DatabaseManager\Exceptions\InvalidDriverException::class);
+
+it('can fake', function () {
+    DatabaseManager::fake();
+
+    DatabaseManager::manage('mysql');
+
+    $this->assertInstanceOf(Envor\DatabaseManager\FakeDatabaseManager::class, DatabaseManager::getDatabaseManager());
+});

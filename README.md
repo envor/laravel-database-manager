@@ -38,6 +38,50 @@ return [
 
 ## Usage
 
+### Faking
+
+This package tests things like creating and deleting physical databases so that you don't have to. You simply call `DatabaseManager::fake()` then test your application's feature logic (validation, etc)
+
+```php
+// controller
+public function store(Request $request)
+{
+    $this->validate($request->all());
+
+    $databaseManager = new Envor\DatabaseManager
+        ->manage($request->database_driver)
+        ->createDatabase($request->database_name);
+    
+    if($databaseManager){
+        $request->user()->databases()->create([
+            'name' => $request->database_name,
+            'driver' => $request->database_driver,
+        ]);
+    }
+}
+```
+
+```php
+    // test
+    public function test_it_can_create_a_database(): void
+    {
+        $this->actingAs($user = User::factory()->create());
+
+        Envor\DatabaseManager\Facades\DatabaseManager::fake();
+
+        $this->post(route('database.create'), [
+            'database_driver' => 'sqlite',
+            'database_name' => 'test_database',
+        ]);
+
+        $this->assertDatabaseHas('databases', [
+            'user_id' => $user->id,
+            'driver' => 'sqlite',
+            'name' => 'test_database',
+        ]);
+    }
+```
+
 ### SQLite
 
 ```php
@@ -112,7 +156,7 @@ This is done by using `Carbon::createFromFormat('Y_m_H_h_i_s_')`.
 
 ## Creating Managers
 
-Out of the box this package includes managers for sqlite and mysql, you can create your own managers and add them to the managers array in the database-manager config.
+Out of the box this package includes managers for sqlite and mysql. You can create your own managers and add them to the managers array in the database-manager config.
 Feel free to submit a `PR` for any additional custom managers that use standard laravel drivers, such as postgres.
 
 ## Testing
