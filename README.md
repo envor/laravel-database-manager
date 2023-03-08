@@ -112,7 +112,7 @@ This is done by using `Carbon::createFromFormat('Y_m_H_h_i_s_')`.
 
 ## Creating Managers
 
-Out of the box this package includes managers for sqlite and mysql, you can create your own managers and add them to the managers array in the database-manager config.
+Out of the box this package includes managers for sqlite and mysql. You can create your own managers and add them to the managers array in the database-manager config.
 Feel free to submit a `PR` for any additional custom managers that use standard laravel drivers, such as postgres.
 
 ## Testing
