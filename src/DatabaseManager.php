@@ -24,7 +24,7 @@ class DatabaseManager
         if (app()->bound(DatabaseManagerContract::class)) {
             // if it is, we need to check if it's being faked
             if (app()->make(DatabaseManagerContract::class) instanceof FakeDatabaseManager) {
-                // if it is, we don't need to do anything
+                // if it is, just return the current instance
                 return $this;
             }
 
