@@ -20,16 +20,11 @@ class DatabaseManager
 
     protected function registerDatabaseManager(string $manager)
     {
-        // first we need to check if the driver is already bound
+        // first we need to check if a driver is already bound
         if (app()->bound(DatabaseManagerContract::class)) {
-            // if it is, we need to check if it's the same as the one we're trying to register
-            // or if it's a fake
-            $instance = app()->make(DatabaseManagerContract::class);
-            if (
-                $instance instanceof FakeDatabaseManager ||
-                $instance instanceof $manager
-            ) {
-                // if it is, we don't need to do anything
+            // if it is, we need to check if it's being faked
+            if (app()->make(DatabaseManagerContract::class) instanceof FakeDatabaseManager) {
+                // if it is, just return the current instance
                 return $this;
             }
 
