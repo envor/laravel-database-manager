@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-database-manager` will be documented in this file.
 
+## v1.1.1 - 2023-03-09
+
+### What's Changed
+
+- only check if registered manager is a fake by @inmanturbo in https://github.com/envor/laravel-database-manager/pull/6
+
+**Full Changelog**: https://github.com/envor/laravel-database-manager/compare/v1.1.0...v1.1.1
+
 ## v1.1.0 - 2023-03-09
 
 ### What's Changed
