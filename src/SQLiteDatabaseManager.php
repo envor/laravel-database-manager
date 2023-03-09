@@ -81,7 +81,7 @@ class SQLiteDatabaseManager implements DatabaseManager
 
     public function makeConnectionConfig(array $baseConfig, string $databaseName): array
     {
-        $baseConfig['database'] = $this->resolveDatabaseName($databaseName);
+        $baseConfig['database'] = $this->getDatabaseName($databaseName);
 
         return $baseConfig;
     }
@@ -93,7 +93,7 @@ class SQLiteDatabaseManager implements DatabaseManager
         return $this;
     }
 
-    public function resolveDatabaseName(string $databaseName): string
+    public function getDatabaseName(string $databaseName): string
     {
         return $this->databaseResolver()->path($databaseName.'.sqlite');
     }

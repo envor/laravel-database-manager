@@ -98,3 +98,7 @@ it('can cleanup old databases', function () {
 
     expect($this->databaseManager->databaseExists($this->deletedBasePath.$this->time->format($this->timeFormat).'test_database'))->toBeFalse();
 });
+
+it('it can get a database name', function () {
+    expect($this->databaseManager->getDatabaseName('test_database'))->toBe(Storage::disk(config('database_manager.sqlite_disk'))->path('test_database.sqlite'));
+});
