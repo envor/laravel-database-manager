@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-database-manager` will be documented in this file.
 
+## v1.0.3 - 2023-03-08
+
+### What's Changed
+
+- [skip ci] Add faker and notes on usage by @inmanturbo in https://github.com/envor/laravel-database-manager/pull/3
+
+**Full Changelog**: https://github.com/envor/laravel-database-manager/compare/v1.0.2...v1.0.3
+
 ## Fix typo in exception error text - 2023-03-08
 
 ### What's Changed

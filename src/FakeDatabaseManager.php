@@ -26,11 +26,11 @@ class FakeDatabaseManager implements DatabaseManager
 
     public function makeConnectionConfig(array $baseConfig, string $databaseName): array
     {
-        $baseConfig['database'] = $baseConfig['driver'] === 'sqlite'
-            ? ':memory:'
-            : $databaseName;
-
-        return $baseConfig;
+        return [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'foreign_key_constraints' => true,
+        ];
     }
 
     public function setConnection(string $connection): self
@@ -64,6 +64,6 @@ class FakeDatabaseManager implements DatabaseManager
 
     public function __toString(): string
     {
-        return 'FakeDatabaseManager';
+        return 'sqlite';
     }
 }
