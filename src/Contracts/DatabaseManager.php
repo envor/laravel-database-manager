@@ -48,4 +48,9 @@ interface DatabaseManager extends Stringable
      * Cleanup old databases.
      */
     public function cleanupOldDatabases(int $daysOld = 1): int;
+
+    /**
+     * Resolve the database name.
+     */
+    public function getDatabaseName(string $databaseName): string;
 }

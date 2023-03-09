@@ -141,6 +141,11 @@ class MySQLDatabaseManager implements DatabaseManager
         return $baseConfig;
     }
 
+    public function getDatabaseName(string $databaseName): string
+    {
+        return $databaseName;
+    }
+
     public function __toString()
     {
         return 'mysql';

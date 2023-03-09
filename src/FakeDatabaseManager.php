@@ -62,6 +62,14 @@ class FakeDatabaseManager implements DatabaseManager
         return 0;
     }
 
+    /**
+     * Resolve the database name.
+     */
+    public function getDatabaseName(string $databaseName): string
+    {
+        return ':memory:';
+    }
+
     public function __toString(): string
     {
         return 'sqlite';

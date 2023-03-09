@@ -137,3 +137,7 @@ it('can cleanup old databases', function () {
 
     expect($this->databaseManager->databaseExists('deleted_'.$this->time->format('Y_m_d_H_i_s_').'test_database'))->toBeFalse();
 });
+
+it('can get a database name', function () {
+    expect($this->databaseManager->getDatabaseName('test_database'))->toBe('test_database');
+});
