@@ -48,7 +48,7 @@ public function store(Request $request)
 {
     $this->validate($request->all());
 
-    $databaseManager = new Envor\DatabaseManager
+    $databaseManager = (new Envor\DatabaseManager)
         ->manage($request->database_driver)
         ->createDatabase($request->database_name);
     
@@ -85,7 +85,7 @@ public function store(Request $request)
 ### SQLite
 
 ```php
-$databaseManager = new Envor\DatabaseManager
+$databaseManager = (new Envor\DatabaseManager)
     ->manage('sqlite')
     ->createDatabase('my-new-database');
 ```
@@ -124,7 +124,7 @@ Erases all the database files in the .trash folder with mtime more than one day 
 ### MYQL
 
 ```php
-$databaseManager = new Envor\DatabaseManager
+$databaseManager = (new Envor\DatabaseManager)
     ->manage('mysql')
     ->setConnection('any-mysql-connection')
     ->createDatabase('my_new_database');
