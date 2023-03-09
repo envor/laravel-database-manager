@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-database-manager` will be documented in this file.
 
+## v1.1.0 - 2023-03-09
+
+### What's Changed
+
+- Add getDatabaseName() by @inmanturbo in https://github.com/envor/laravel-database-manager/pull/5
+
+**Full Changelog**: https://github.com/envor/laravel-database-manager/compare/v1.0.4...v1.1.0
+
 ## v1.0.4 - 2023-03-09
 
 ### What's Changed
