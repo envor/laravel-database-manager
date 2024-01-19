@@ -121,7 +121,7 @@ $databaseManager->cleanupOldDatabases(
 
 Erases all the database files in the .trash folder with mtime more than one day old
 
-### MYQL
+### MYSQL
 
 ```php
 $databaseManager = (new Envor\DatabaseManager)
