@@ -13,7 +13,7 @@ composer require envor/laravel-database-manager
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-database-manager-config"
+php artisan vendor:publish --tag="database-manager-config"
 ```
 
 This is the contents of the published config file:
