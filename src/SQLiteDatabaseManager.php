@@ -1,14 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Envor\DatabaseManager;
 
 use Envor\DatabaseManager\Contracts\DatabaseManager;
 use Envor\DatabaseManager\Exceptions\NoConnectionSetException;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Connection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Stringable;
 
 class SQLiteDatabaseManager implements DatabaseManager
 {
@@ -24,31 +25,37 @@ class SQLiteDatabaseManager implements DatabaseManager
         return DB::connection($this->connection);
     }
 
-    public function createDatabase($databaseName): bool
+    public function createDatabase(string|Stringable $databaseName): bool
     {
+        $databaseName = (string) $databaseName;
+
         try {
-            return $this->databaseResolver()->put($databaseName.'.sqlite', '');
+            return $this->storageDisk()->put($databaseName.'.sqlite', '');
         } catch (\Throwable $th) {
             return false;
         }
     }
 
-    public function deleteDatabase($databaseName, $deletedAt = null): bool
+    public function deleteDatabase(string|Stringable $databaseName, ?Carbon $deletedAt = null): bool
     {
+        $databaseName = (string) $databaseName;
+
         $deletedAt = $deletedAt ?? now();
         $deletedDatabaseFilePath = '.trash/'.$deletedAt->format('Y/m/d/H_i_s_').$databaseName.'.sqlite';
 
-        $file = $this->databaseResolver()->move($databaseName.'.sqlite', $deletedDatabaseFilePath);
+        $file = $this->storageDisk()->move($databaseName.'.sqlite', $deletedDatabaseFilePath);
 
-        touch($this->databaseResolver()->path($deletedDatabaseFilePath), $deletedAt->getTimestamp());
+        touch($this->storageDisk()->path($deletedDatabaseFilePath), $deletedAt->getTimestamp());
 
         return $file;
     }
 
-    public function eraseDatabase($databaseName): bool
+    public function eraseDatabase(string|Stringable $databaseName): bool
     {
+        $databaseName = (string) $databaseName;
+
         try {
-            return $this->databaseResolver()->delete($databaseName.'.sqlite');
+            return $this->storageDisk()->delete($databaseName.'.sqlite');
         } catch (\Throwable $th) {
             return false;
         }
@@ -58,10 +65,10 @@ class SQLiteDatabaseManager implements DatabaseManager
     {
         $count = 0;
         // keep only files new than $daysOld days
-        collect($this->databaseResolver()->listContents('.trash', true))
+        collect($this->storageDisk()->listContents('.trash', true))
             ->each(function ($file) use ($daysOld, &$count) {
                 if ($file['type'] == 'file' && $file['lastModified'] < now()->subDays($daysOld)->getTimestamp()) {
-                    $this->databaseResolver()->delete($file['path']);
+                    $this->storageDisk()->delete($file['path']);
                     $count++;
                 }
             });
@@ -71,12 +78,12 @@ class SQLiteDatabaseManager implements DatabaseManager
 
     public function listTableNames(): array
     {
-        return $this->database()->getDoctrineSchemaManager()->listTableNames();
+        return $this->database()->getSchemaBuilder()->getTableListing();
     }
 
     public function databaseExists(string $databaseName): bool
     {
-        return $this->databaseResolver()->exists($databaseName.'.sqlite');
+        return $this->storageDisk()->exists($databaseName.'.sqlite');
     }
 
     public function makeConnectionConfig(array $baseConfig, string $databaseName): array
@@ -95,10 +102,10 @@ class SQLiteDatabaseManager implements DatabaseManager
 
     public function getDatabaseName(string $databaseName): string
     {
-        return $this->databaseResolver()->path($databaseName.'.sqlite');
+        return $this->storageDisk()->path($databaseName.'.sqlite');
     }
 
-    protected function databaseResolver()
+    protected function storageDisk(): Filesystem
     {
         return Storage::disk(config('database_manager.sqlite_disk'));
     }

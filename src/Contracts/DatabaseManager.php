@@ -2,7 +2,7 @@
 
 namespace Envor\DatabaseManager\Contracts;
 
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Stringable;
 
 interface DatabaseManager extends Stringable
@@ -15,7 +15,7 @@ interface DatabaseManager extends Stringable
     /**
      * Delete a database.
      */
-    public function deleteDatabase(string $databaseName, null|Carbon $deletedAt = null): bool;
+    public function deleteDatabase(string $databaseName, ?Carbon $deletedAt = null): bool;
 
     /**
      * Does a database exist.

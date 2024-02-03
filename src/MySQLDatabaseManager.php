@@ -1,15 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Envor\DatabaseManager;
 
-use Carbon\Carbon;
 use Envor\DatabaseManager\Contracts\DatabaseManager;
 use Envor\DatabaseManager\Exceptions\NoConnectionSetException;
 use Illuminate\Database\Connection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Stringable;
 
 class MySQLDatabaseManager implements DatabaseManager
 {
@@ -34,19 +33,23 @@ class MySQLDatabaseManager implements DatabaseManager
 
     public function listTableNames(): array
     {
-        return $this->database()->getDoctrineSchemaManager()->listTableNames();
+        return $this->database()->getSchemaBuilder()->getTableListing();
     }
 
-    public function createDatabase($databaseName): bool
+    public function createDatabase(string|Stringable $databaseName): bool
     {
+        $databaseName = (string) $databaseName;
+
         $charset = $this->database()->getConfig('charset');
         $collation = $this->database()->getConfig('collation');
 
         return $this->database()->statement("CREATE DATABASE IF NOT EXISTS `{$databaseName}` CHARACTER SET `$charset` COLLATE `$collation`");
     }
 
-    public function deleteDatabase($databaseName, $deletedAt = null): bool
+    public function deleteDatabase(string|Stringable $databaseName, ?Carbon $deletedAt = null): bool
     {
+        $databaseName = (string) $databaseName;
+
         try {
             $deletedAt = $deletedAt ?? now();
             $deletedDatabaseName = 'deleted_'.$deletedAt->format('Y_m_d_H_i_s_').$databaseName;
@@ -82,8 +85,10 @@ class MySQLDatabaseManager implements DatabaseManager
         }
     }
 
-    public function eraseDatabase($databaseName): bool
+    public function eraseDatabase(string|Stringable $databaseName): bool
     {
+        $databaseName = (string) $databaseName;
+
         try {
             $this->database()->statement("DROP DATABASE IF EXISTS `{$databaseName}`");
 
@@ -103,8 +108,10 @@ class MySQLDatabaseManager implements DatabaseManager
         return $count;
     }
 
-    protected function deleteIfOld(string $databaseName, int $daysOld = 1): int
+    protected function deleteIfOld(string|Stringable $databaseName, int $daysOld = 1): int
     {
+        $databaseName = (string) $databaseName;
+
         if ($this->databaseIsOld($databaseName, $daysOld)) {
             $this->eraseDatabase($databaseName);
 
@@ -129,8 +136,10 @@ class MySQLDatabaseManager implements DatabaseManager
         return $date < now()->subDays($daysOld)->getTimestamp();
     }
 
-    public function databaseExists(string $databaseName): bool
+    public function databaseExists(string|Stringable $databaseName): bool
     {
+        $databaseName = (string) $databaseName;
+
         return (bool) $this->database()->select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{$databaseName}'");
     }
 
@@ -141,9 +150,9 @@ class MySQLDatabaseManager implements DatabaseManager
         return $baseConfig;
     }
 
-    public function getDatabaseName(string $databaseName): string
+    public function getDatabaseName(string|Stringable $databaseName): string
     {
-        return $databaseName;
+        return (string) $databaseName;
     }
 
     public function __toString()

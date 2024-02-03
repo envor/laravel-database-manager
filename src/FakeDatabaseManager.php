@@ -14,7 +14,7 @@ class FakeDatabaseManager implements DatabaseManager
         return true;
     }
 
-    public function deleteDatabase(string $databaseName, null|Carbon $deletedAt = null): bool
+    public function deleteDatabase(string $databaseName, ?Carbon $deletedAt = null): bool
     {
         return true;
     }
