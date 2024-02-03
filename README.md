@@ -84,13 +84,15 @@ public function store(Request $request)
 
 ### SQLite
 
+Creates an sqlite database at `storage/app/my-new-database.sqlite`
+
 ```php
 $databaseManager = (new Envor\DatabaseManager)
     ->manage('sqlite')
     ->createDatabase('my-new-database');
 ```
 
-Creates an sqlite database at `storage/app/my-new-database.sqlite`
+Soft deletes the database and moves it to `storage/app/.trash/2023/03/02/07_04_38_my-new-database.sqlite`:
 
 > The package appends the .sqlite file extension on its own,
 > and expects managed sqlite database files to have the extension
@@ -104,14 +106,14 @@ $databaseManager->deleteDatabase(
 );
 ```
 
-Soft deletes the database and moves it to `storage/app/.trash/2023/03/02/07_04_38_my-new-database.sqlite`
+Erases the database permanently from disk:
 
 ```php
 // erase the database permanently from disk
 $databaseManager->eraseDatabase('.trash/2023/03/02/07_04_38_my-new-database');
 ```
 
-Erases the database permanently from disk
+Erases all the database files in the .trash folder with mtime more than one day old:
 
 ```php
 $databaseManager->cleanupOldDatabases(
@@ -119,9 +121,12 @@ $databaseManager->cleanupOldDatabases(
 );
 ```
 
-Erases all the database files in the .trash folder with mtime more than one day old
 
 ### MYSQL
+
+Sets the connection then creates a new database.
+> [!NOTE]
+> The sqlite driver to doesn't need a connection because it uses the `Illuminate\Support\Storage` helper under the hood.
 
 ```php
 $databaseManager = (new Envor\DatabaseManager)
@@ -129,10 +134,7 @@ $databaseManager = (new Envor\DatabaseManager)
     ->setConnection('any-mysql-connection')
     ->createDatabase('my_new_database');
 ```
-
-Sets the connection then creates a new database.
->Note:
->The sqlite driver to doesn't need a connection because it uses the `Illuminate\Support\Storage` helper under the hood.
+Soft deletes the database and moves it to `deleted_2023_3_2_7_04_38_my_new_database`
 
 ```php
 echo now()->format('Y_m_d_h_i_s_');
@@ -143,16 +145,14 @@ $databaseManager->deleteDatabase(
 );
 ```
 
-Soft deletes the database and moves it to `deleted_2023_3_2_7_04_38_my_new_database`
+No mtime for mysql, simply compares `$daysOld` against the formated time segment in the deleted name `2023_3_2_7_04_38_`.
+This is done by using `Carbon::createFromFormat('Y_m_H_h_i_s_')`.
 
 ```php
 $databaseManager->cleanupOldDatabases(
     daysOld: 1, // optional, defaults to one
 );
 ```
-
-No mtime for mysql, simply compares `$daysOld` against the formated time segment in the deleted name `2023_3_2_7_04_38_`.
-This is done by using `Carbon::createFromFormat('Y_m_H_h_i_s_')`.
 
 ## Creating Managers
 
