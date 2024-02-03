@@ -15,32 +15,32 @@ beforeEach(function () {
         $this->fail('Docker is not installed');
     }
 
-    $this->containerInstance = DockerContainer::create('mysql:latest')
-        ->setEnvironmentVariable('MYSQL_ROOT_PASSWORD', 'root')
-        ->setEnvironmentVariable('MYSQL_DATABASE', 'database_manager_mysql')
-        ->name('database_manager_mysql')
-        ->mapPort(10002, 3306)
+    $this->containerInstance = DockerContainer::create('mariadb:latest')
+        ->setEnvironmentVariable('MARIADB_ROOT_PASSWORD', 'root')
+        ->setEnvironmentVariable('MARIADB_DATABASE', 'database_manager_mariadb')
+        ->name('database_manager_mariadb')
+        ->mapPort(10001, 3306)
         ->start();
 
     $i = 0;
 
     while ($i < 50) {
-        $process = Process::run('mysql -u root -proot -P 10002 -h 127.0.0.1  database_manager_mysql -e "show tables;"');
+        $process = Process::run('mysql -u root -proot -P 10001 -h 127.0.0.1  database_manager_mariadb -e "show tables;"');
         if ($process->successful()) {
             break;
         }
         sleep(.5);
     }
 
-    config(['database.connections.database_manager_mysql' => array_merge(config('database.connections.mysql'), [
-        'database' => 'database_manager_mysql',
+    config(['database.connections.database_manager_mariadb' => array_merge(config('database.connections.mariadb'), [
+        'database' => 'database_manager_mariadb',
         'host' => '127.0.0.1',
-        'port' => '10002',
+        'port' => '10001',
         'username' => 'root',
         'password' => 'root',
     ])]);
 
-    $this->databaseManager = getDatabaseMysqlManager('database_manager_mysql');
+    $this->databaseManager = getDatabaseMysqlManager('database_manager_mariadb');
     $this->databaseManager->createDatabase('test_database');
     $this->time = Carbon::now();
 });
@@ -70,22 +70,22 @@ it('can check if a database exists', function () {
 
 it('can make a connection config', function () {
     $connectionConfig = $this->databaseManager->makeConnectionConfig(
-        baseConfig: config('database.connections.database_manager_mysql'),
+        baseConfig: config('database.connections.database_manager_mariadb'),
         databaseName: 'test_database',
     );
 
-    expect($connectionConfig)->toBe(array_merge(config('database.connections.database_manager_mysql'), [
+    expect($connectionConfig)->toBe(array_merge(config('database.connections.database_manager_mariadb'), [
         'database' => 'test_database',
     ]));
 });
 
 it('can set a connection', function () {
     $connection = getProperty($this->databaseManager, 'connection');
-    expect($connection)->toBe('database_manager_mysql');
+    expect($connection)->toBe('database_manager_mariadb');
 });
 
 it('can get a list of table names', function () {
-    DB::connection('database_manager_mysql')
+    DB::connection('database_manager_mariadb')
         ->statement('CREATE TABLE test_table (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id))');
 
     expect($this->databaseManager->listTableNames())->toBe(['test_table']);
