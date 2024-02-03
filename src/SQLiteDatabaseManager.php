@@ -78,6 +78,11 @@ class SQLiteDatabaseManager implements DatabaseManager
 
     public function listTableNames(): array
     {
+        // deprecated in Laravel 11
+        if (method_exists($this->database(), 'getDoctrineSchemaManager')) {
+            return $this->database()->getDoctrineSchemaManager()->listTableNames();
+        }
+
         return $this->database()->getSchemaBuilder()->getTableListing();
     }
 
