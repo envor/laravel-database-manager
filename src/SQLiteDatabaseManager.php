@@ -8,6 +8,7 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Connection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Stringable;
 
@@ -29,11 +30,11 @@ class SQLiteDatabaseManager implements DatabaseManager
     {
         $databaseName = (string) $databaseName;
 
-        try {
-            return $this->storageDisk()->put($databaseName.'.sqlite', '');
-        } catch (\Throwable $th) {
+        if ($this->databaseExists($databaseName)) {
             return false;
         }
+
+        return $this->database()->getSchemaBuilder()->createDatabase($path = $this->getDatabaseName($databaseName));
     }
 
     public function deleteDatabase(string|Stringable $databaseName, ?Carbon $deletedAt = null): bool
@@ -55,7 +56,7 @@ class SQLiteDatabaseManager implements DatabaseManager
         $databaseName = (string) $databaseName;
 
         try {
-            return $this->storageDisk()->delete($databaseName.'.sqlite');
+            return $this->database()->getSchemaBuilder()->dropDatabaseIfExists($this->getDatabaseName($databaseName));
         } catch (\Throwable $th) {
             return false;
         }
@@ -88,7 +89,7 @@ class SQLiteDatabaseManager implements DatabaseManager
 
     public function databaseExists(string $databaseName): bool
     {
-        return $this->storageDisk()->exists($databaseName.'.sqlite');
+        return File::exists($this->getDatabaseName($databaseName));
     }
 
     public function makeConnectionConfig(array $baseConfig, string $databaseName): array
@@ -112,7 +113,15 @@ class SQLiteDatabaseManager implements DatabaseManager
 
     protected function storageDisk(): Filesystem
     {
-        return Storage::disk(config('database_manager.sqlite_disk'));
+        $config = config('filesystems.disks.'.config('database-manager.sqlite_disk', 'local'));
+
+        if ($config['driver'] != 'local') {
+            throw new \Exception('Only local disk is supported for sqlite databases');
+        }
+
+        $disk = Storage::disk(config('database-manager.sqlite_disk', 'local'));
+
+        return $disk;
     }
 
     public function __toString()

@@ -43,12 +43,13 @@ class MySQLDatabaseManager implements DatabaseManager
 
     public function createDatabase(string|Stringable $databaseName): bool
     {
-        $databaseName = (string) $databaseName;
+        $databaseName = (string) $this->getDatabaseName((string) $databaseName);
 
-        $charset = $this->database()->getConfig('charset');
-        $collation = $this->database()->getConfig('collation');
+        if ($this->databaseExists($databaseName)) {
+            return false;
+        }
 
-        return $this->database()->statement("CREATE DATABASE IF NOT EXISTS `{$databaseName}` CHARACTER SET `$charset` COLLATE `$collation`");
+        return $this->database()->getSchemaBuilder()->createDatabase($databaseName);
     }
 
     public function deleteDatabase(string|Stringable $databaseName, ?Carbon $deletedAt = null): bool
@@ -57,9 +58,9 @@ class MySQLDatabaseManager implements DatabaseManager
 
         try {
             $deletedAt = $deletedAt ?? now();
-            $deletedDatabaseName = 'deleted_'.$deletedAt->format('Y_m_d_H_i_s_').$databaseName;
+            $deletedDatabaseName = $this->getDatabaseName('deleted_'.$deletedAt->format('Y_m_d_H_i_s_').$databaseName);
 
-            $this->database()->statement("DROP DATABASE IF EXISTS `{$deletedDatabaseName}`");
+            $this->database()->getSchemaBuilder()->dropDatabaseIfExists($deletedDatabaseName);
             $this->database()->statement("SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';");
             $this->createDatabase($deletedDatabaseName);
 
@@ -81,7 +82,7 @@ class MySQLDatabaseManager implements DatabaseManager
                 $this->database()->statement("INSERT INTO {$deletedDatabaseName}.$table SELECT * FROM $table;");
             }
 
-            $this->database()->statement("DROP DATABASE IF EXISTS `{$databaseName}`");
+            $this->database()->getSchemaBuilder()->dropDatabaseIfExists($this->getDatabaseName($databaseName));
             $this->setConnection($currentConnection);
 
             return true;
