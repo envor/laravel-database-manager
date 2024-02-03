@@ -1,6 +1,5 @@
 <?php
 
-use Envor\DatabaseManager\MySQLDatabaseManager;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Process;
