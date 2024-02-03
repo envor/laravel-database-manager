@@ -31,7 +31,7 @@ beforeEach(function () {
         sleep(.5);
     }
 
-    config(['database.connections.database_manager_mariadb' => array_merge(config('database.connections.mariadb'), [
+    config(['database.connections.database_manager_mariadb' => array_merge(config('database.connections.mariadb', config('database.connections.mysql')), [
         'database' => 'database_manager_mariadb',
         'host' => '127.0.0.1',
         'port' => '10001',
