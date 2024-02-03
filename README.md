@@ -10,6 +10,14 @@ You can install the package via composer:
 composer require envor/laravel-database-manager
 ```
 
+> [!WARNING]  
+> If you are using laravel 10, you will have to manually install doctrine/dbal
+> doctrine/dbal is not a requirement for Laravel 11
+
+```bash
+composer require doctrine/dbal
+```
+
 You can publish the config file with:
 
 ```bash
