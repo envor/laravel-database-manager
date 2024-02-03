@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-database-manager` will be documented in this file.
 
+## Laravel 11 - 2024-02-03
+
+**Full Changelog**: https://github.com/envor/laravel-database-manager/compare/v1.1.2...v2.0.0
+
 ## v1.1.2 - 2023-12-07
 
 ### What's Changed
