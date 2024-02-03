@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-database-manager` will be documented in this file.
 
+## v2.0.2 - 2024-02-03
+
+**Full Changelog**: https://github.com/envor/laravel-database-manager/compare/v2.0.0...v2.0.2
+
 ## v2.0.1 - 2024-02-03
 
 **Full Changelog**: https://github.com/envor/laravel-database-manager/compare/v2.0.0...v2.0.1
