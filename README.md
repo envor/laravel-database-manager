@@ -1,3 +1,4 @@
+# Abondoned! Use <https://github.com/envor/laravel-schema-macros> instead
 # A small library for managing databases
 
 Create and delete `mysql` and `sqlite` databases. Soft deletes, or "recycles" databases by default. Also it can clean up old recycled databases.
